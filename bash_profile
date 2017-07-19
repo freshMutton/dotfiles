@@ -46,7 +46,7 @@ alias vv="vm start \"vpn\""
 alias kill-vv="vm stop \"vpn\""
 
 # OPAM configuration
-. /Users/matt.sutton/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+. ~/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
 # NVM configuration
 export NVM_DIR="$HOME/.nvm"
