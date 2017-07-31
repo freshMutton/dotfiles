@@ -3,7 +3,7 @@ export EDITOR='nvim'
 ZSH_TMUX_AUTOSTART=true
 ZSH_THEME="prompt"
 
-plugins=(git tmux vi-mode)
+plugins=(git-prompt tmux vi-mode)
 source $ZSH/oh-my-zsh.sh
 
 # ssh
