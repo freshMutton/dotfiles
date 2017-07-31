@@ -1,0 +1,5 @@
+{
+  "parserOptions": {
+    "env": { "es6": true }
+  }
+}
