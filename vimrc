@@ -2,6 +2,7 @@ colorscheme molokai
 let g:molokai_original=1
 let g:rehash256=1
 
+filetype indent on
 syntax enable
 
 set tabstop=2
@@ -10,22 +11,18 @@ set shiftwidth=2
 set expandtab
 set autoindent
 set smarttab
-
-set hidden " dont auto-save tabs when switching"
-
-set autoread " reload file if changed outside of vim automagically
-
-set noswapfile " we don't need no swap file
-
+set lazyredraw
+set hidden
+set autoread
+set noswapfile
 set number
 set cursorline
-filetype indent on
 set wildmenu
 set wildignorecase
-set backspace=2 " sane backspacing
-set showmatch " highlight matching parentheses
-set virtualedit=onemore " sane cursor
-set laststatus=2 " show airline
+set backspace=2
+set showmatch
+set virtualedit=onemore
+set laststatus=2
 set colorcolumn=80
 
 set incsearch
@@ -36,6 +33,91 @@ set smartcase
 " share clipboard with other tmux/terminal panes
 set clipboard=unnamed
 
+" plugins
+call plug#begin('~/.vim/plugged')
+" editor features
+Plug 'w0rp/ale'
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni#functions = {}
+
+" don't show preview window
+set completeopt-=preview
+
+" close on completion
+if !exists('g:deoplete#omni#input_patterns')
+  let g:deoplete#omni#input_patterns = {}
+endif
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" tab completion
+let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+
+Plug 'vim-airline/vim-airline'
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#fnamemod=':t'
+let g:airline#extensions#ale#enabled = 1
+
+Plug 'airblade/vim-gitgutter'
+let g:gitgutter_realtime=1
+let g:gitgutter_eager=1
+
+Plug 'Raimondi/delimitMate'
+Plug 'ntpeters/vim-better-whitespace'
+autocmd BufWritePre * StripWhitespace
+
+Plug 'scrooloose/nerdtree'
+autocmd StdinReadPre * let s:std_in=1
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
+Plug 'junegunn/fzf.vim'
+command! -nargs=* Files call fzf#run(
+\ { 'source': 'ag -l'
+\ , 'sink'  : 'e'
+\ , 'down'  : '40%' })
+
+let g:fzf_colors =
+\ { 'fg'      : ['fg', 'Normal']
+\ , 'bg'      : ['bg', 'Normal']
+\ , 'hl'      : ['fg', 'Comment']
+\ , 'fg+'     : ['fg', 'CursorLine', 'CursorColumn', 'Normal']
+\ , 'bg+'     : ['bg', 'CursorLine', 'CursorColumn']
+\ , 'hl+'     : ['fg', 'Statement']
+\ , 'info'    : ['fg', 'PreProc']
+\ , 'prompt'  : ['fg', 'Conditional']
+\ , 'pointer' : ['fg', 'Exception']
+\ , 'marker'  : ['fg', 'Keyword']
+\ , 'spinner' : ['fg', 'Label']
+\ , 'header'  : ['fg', 'Comment'] }
+
+" languages
+" JavaScript
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+Plug 'carlitux/deoplete-ternjs'
+Plug 'mxw/vim-jsx'
+Plug 'othree/jspc.vim'
+Plug 'flowtype/vim-flow'
+Plug 'pangloss/vim-javascript'
+
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+
+let g:flow#autoclose=1
+let g:flow#timeout=4
+
+let g:javascript_plugin_flow=1
+let g:jsx_ext_required = 0
+
+let g:deoplete#omni#functions.javascript = ['tern#Complete', 'jspc#omni']
+
+" OCaml
+let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+execute "set rtp+=" . g:opamshare . "/merlin/vim"
+execute "set rtp+=" . g:opamshare . "/ocp-indent/vim"
+call plug#end()
+
 " keybindings
 let mapleader=' ' "<Leader> key
 
@@ -43,7 +125,7 @@ let mapleader=' ' "<Leader> key
 nnoremap <esc> :noh<return><esc>
 nnoremap <esc>^[ <esc>^[
 
-" tab/buffer
+" buffer
 nmap <leader>l :bnext<cr>
 nmap <leader>h :bprevious<cr>
 nmap <leader>q :bp <BAR> bd #<cr>
@@ -52,78 +134,13 @@ nmap <leader>q :bp <BAR> bd #<cr>
 nmap <leader>lo :lopen<cr>
 nmap <leader>lc :lclose<cr>
 
-" OCaml
-let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-execute "set rtp+=" . g:opamshare . "/merlin/vim"
-
-set rtp+="~/.opam/4.02.3/share/ocp-indent/vim"
-
+" type annotations
 nmap <leader>t :MerlinTypeOf<cr>
 
-call plug#begin('~/.vim/plugged')
-Plug 'vim-airline/vim-airline'
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#fnamemod=':t'
-let g:airline#extensions#syntastic#enabled=1
-
-Plug 'airblade/vim-gitgutter'
-let g:gitgutter_realtime=1
-let g:gitgutter_eager=1
-
-Plug 'Shougo/vimproc.vim', {'do': 'make'}
-Plug 'Shougo/unite.vim'
-let g:unite_enable_start_insert=1
-let g:unite_prompt='» '
-let g:unite_data_directory='~/.vim/.cache/unite'
-let g:unite_enable_auto_select=0
-let g:unite_source_rec_async_command=['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
-let g:unite_source_grep_command=['ag', '--vimgrep']
-
-nmap <leader>] :Unite -auto-resize buffer -buffer-name=file file_rec/async:!<cr>
-nmap <leader>\ :Unite grep:!<cr>
-
-Plug 'Raimondi/delimitMate'
-
-Plug 'Valloric/YouCompleteMe'
-let g:ycm_add_preview_to_completeopt=0
-let g:ycm_confirm_extra_conf=0
-set completeopt-=preview
-
-Plug 'scrooloose/syntastic'
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=1
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=0
-let g:syntastic_aggregate_errors=1
-let g:syntastic_ocaml_checkers=["merlin"]
-let g:syntastic_javascript_checkers=["eslint", "flow"]
-let g:syntastic_javascript_flow_exe="flow"
-let g:syntastic_javascript_eslint_exec="eslint_d"
-
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-Plug 'mxw/vim-jsx'
-Plug 'othree/jspc.vim'
-Plug 'pangloss/vim-javascript'
-
-let g:javascript_plugin_flow=1
-
-Plug 'digitaltoad/vim-pug'
-
-Plug 'ntpeters/vim-better-whitespace'
-autocmd BufWritePre * StripWhitespace
-
-Plug 'scrooloose/nerdtree'
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" find/navigate
+nmap <leader>] :Files<cr>
+nmap <leader>\ :Ag<cr>
 nmap <leader>/ :NERDTreeToggle<cr>
 
-Plug 'flowtype/vim-flow'
-
-Plug 'elmcast/elm-vim'
-
-call plug#end()
-
-"calling unite functions after plug#end()
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
+" tab completion
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
