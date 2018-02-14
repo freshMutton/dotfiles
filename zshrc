@@ -6,9 +6,6 @@ ZSH_THEME="prompt"
 plugins=(git-prompt tmux vi-mode)
 source $ZSH/oh-my-zsh.sh
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
 # aliases
 alias ls="ls -laG"
 alias fuck='sudo $(history -p !!)'
@@ -28,6 +25,10 @@ alias branch="git branch"
 alias nuke="git reset --hard"
 alias log="git log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\""
 alias merge="git merge --no-ff"
+alias amend="git commit --amend"
+alias fixup="git commit --fixup"
+alias shove="git push --force"
+alias rebase="git rebase -i --autosquash"
 
 alias v="nvim"
 

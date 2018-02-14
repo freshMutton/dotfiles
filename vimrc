@@ -37,6 +37,10 @@ set clipboard=unnamed
 call plug#begin('~/.vim/plugged')
 " editor features
 Plug 'w0rp/ale'
+let g:ale_fixers = {}
+let g:ale_fix_on_save = 1
+let g:ale_set_highlights = 1
+let g:ale_sign_error = "•"
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
@@ -93,29 +97,41 @@ let g:fzf_colors =
 \ , 'header'  : ['fg', 'Comment'] }
 
 " languages
+
 " JavaScript
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'carlitux/deoplete-ternjs'
+Plug 'steelsojka/deoplete-flow'
 Plug 'mxw/vim-jsx'
 Plug 'othree/jspc.vim'
 Plug 'flowtype/vim-flow'
 Plug 'pangloss/vim-javascript'
+Plug 'wokalski/autocomplete-flow'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
 
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
 
-let g:flow#autoclose=1
-let g:flow#timeout=4
+let g:flow#autoclose = 1
+let g:flow#timeout = 4
 
-let g:javascript_plugin_flow=1
+let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 0
 
+let g:neosnippet#enable_completed_snippet = 1
 let g:deoplete#omni#functions.javascript = ['tern#Complete', 'jspc#omni']
 
 " OCaml
 let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare . "/merlin/vim"
 execute "set rtp+=" . g:opamshare . "/ocp-indent/vim"
+
+" Scala
+Plug 'ensime/ensime-vim', { 'do': ':UpdateRemotePlugins' }
+autocmd BufWritePost *.scala silent :EnTypeCheck
+nmap <leader>d :EnDeclarationSplit v
+
 call plug#end()
 
 " keybindings
@@ -134,13 +150,29 @@ nmap <leader>q :bp <BAR> bd #<cr>
 nmap <leader>lo :lopen<cr>
 nmap <leader>lc :lclose<cr>
 
-" type annotations
-nmap <leader>t :MerlinTypeOf<cr>
+
+" tab completion
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" reindent
+nmap <leader>f mzgg=G`z
 
 " find/navigate
+nmap <leader>[ :Buffer<cr>
 nmap <leader>] :Files<cr>
 nmap <leader>\ :Ag<cr>
 nmap <leader>/ :NERDTreeToggle<cr>
 
-" tab completion
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+autocmd FileType ocaml      nmap <buffer> <leader>d :MerlinLocate<cr>
+autocmd FileType javascript nmap <buffer> <leader>d :TernDef<cr>
+autocmd FileType scala      nmap <buffer> <leader>d :EnDeclaration<cr>
+
+" type annotations
+autocmd FileType ocaml      nmap <buffer> <leader>t :MerlinTypeOf<cr>
+autocmd FileType javascript nmap <buffer> <leader>t :FlowType<cr>
+autocmd FileType scala      nmap <buffer> <leader>t :EnType<cr>
+
+" refactor
+autocmd FileType ocaml      nmap <buffer> <leader>r :MerlinRename<cr>
+autocmd FileType javascript nmap <buffer> <leader>r :TernRename<cr>
+autocmd FileTYpe scala      nmap <buffer> <leader>r :EnRename<cr>
