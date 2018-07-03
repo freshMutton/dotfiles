@@ -10,11 +10,6 @@ brew "python"
 brew "python3"
 brew "ruby"
 
-# Security tools
-brew "dnscrypt-proxy"
-brew "dnsmasq", args: ["with-dnssec"]
-cask "little-snitch"
-
 # CLI tools
 brew "zsh"
 brew "zsh-completions"
@@ -27,14 +22,15 @@ brew "entr"
 
 # Apps
 cask "google-chrome"
-cask "firefox"
+cask "firefoxdeveloperedition"
 cask "lastpass"
 cask "dropbox"
 cask "karabiner-elements"
 cask "spotify"
 cask "postman"
 cask "iterm2"
-cask "docker-toolbox"
+cask "docker"
+cask "visual-studio"
 
 # Languages
 brew "nvm"
@@ -42,6 +38,7 @@ brew "ocaml"
 brew "opam"
 cask "java"
 brew "scala"
+brew "dotnet"
 
 # Etc.
 cask "font-fira-code"
