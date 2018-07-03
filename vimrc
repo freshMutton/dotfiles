@@ -132,6 +132,9 @@ Plug 'ensime/ensime-vim', { 'do': ':UpdateRemotePlugins' }
 autocmd BufWritePost *.scala silent :EnTypeCheck
 nmap <leader>d :EnDeclarationSplit v
 
+" F#
+Plug 'fsharp/vim-fsharp', { 'for': 'fsharp', 'do': 'make fsautocomplete' }
+
 call plug#end()
 
 " keybindings
