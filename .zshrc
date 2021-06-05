@@ -1,4 +1,17 @@
+export ZSH="~/.oh-my-zsh"
+
 export EDITOR='vim'
+
+ZSH_TMUX_AUTOSTART=true
+ZSH_THEME="prompt"
+
+plugins=(
+  git-prompt
+  tmux
+  vi-mode
+)
+
+source $ZSH/oh-my-zsh.sh
 
 # aliases
 alias ls="ls -laG"
