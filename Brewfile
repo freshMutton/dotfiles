@@ -28,17 +28,8 @@ brew "vim"
 cask "mactex"
 
 # languages
-brew "mono"
 brew "node"
 brew "nvm"
-brew "ocaml"
-brew "opam"
-brew "ruby"
-brew "sbt"
-brew "scala"
-brew "swi-prolog"
-cask "adoptopenjdk"
-cask "dotnet-sdk"
 brew "yarn"
 
 # apps
@@ -51,3 +42,5 @@ cask "iterm2"
 cask "postman"
 cask "spotify"
 mas "Affinity Photo", id: 824183456
+cask "rectangle"
+cask "microsoft-edge"
