@@ -1,38 +1,40 @@
-colorscheme molokai
-let g:molokai_original=1
-let g:rehash256=1
+vim.cmd("colorscheme molokai")
+vim.g.molokai_original = 1
 
-filetype indent on
-syntax enable
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.smarttab = true
+vim.opt.lazyredraw = true
+vim.opt.hidden = true
+vim.opt.autoread = true
+vim.opt.swapfile = false
+vim.opt.number = true
+vim.opt.cursorline = true
+vim.opt.wildmenu = true
+vim.opt.wildignorecase = true
+vim.opt.backspace = "2"
+vim.opt.showmatch = true
+vim.opt.virtualedit = "onemore"
+vim.opt.laststatus = 2
+vim.opt.colorcolumn = "80"
 
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set expandtab
-set autoindent
-set smarttab
-set lazyredraw
-set hidden
-set autoread
-set noswapfile
-set number
-set cursorline
-set wildmenu
-set wildignorecase
-set backspace=2
-set showmatch
-set virtualedit=onemore
-set laststatus=2
-set colorcolumn=80
+vim.opt.incsearch = true
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
+vim.opt.incsearch = true
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
-" share clipboard with other tmux/terminal panes
-set clipboard=unnamed
+-- share clipboard with other tmux/terminal panes
+vim.opt.clipboard = "unnamed"
 
+vim.cmd([[
 " plugins
 call plug#begin('~/.vim/plugged')
 Plug 'prabirshrestha/async.vim'
@@ -137,3 +139,5 @@ nmap <buffer> <leader>t :LspHover<cr>
 nmap <buffer> <leader>r :LspRename<cr>
 nmap <buffer> <leader>f :LspDocumentFormat<cr>
 " include code folding, code navigation
+autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+]])

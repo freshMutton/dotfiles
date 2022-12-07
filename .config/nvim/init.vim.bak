@@ -1,9 +1,7 @@
-colorscheme molokai
-let g:molokai_original=1
-let g:rehash256=1
-
 filetype indent on
 syntax enable
+colorscheme molokai
+let g:molokai_original = 1
 
 set tabstop=2
 set softtabstop=2
@@ -137,3 +135,4 @@ nmap <buffer> <leader>t :LspHover<cr>
 nmap <buffer> <leader>r :LspRename<cr>
 nmap <buffer> <leader>f :LspDocumentFormat<cr>
 " include code folding, code navigation
+autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
