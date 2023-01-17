@@ -22,8 +22,6 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp off
 # Restart firewall to take effect
 sudo pkill -HUP socketfilterfw
 
-# TODO: dnscrypt
-
 # Disable WiFi captive portals
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -bool false
 

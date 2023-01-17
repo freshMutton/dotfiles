@@ -44,12 +44,16 @@ alias rebase="git rebase -i --autosquash"
 
 alias v="nvim"
 
-[ -f ~/.opam/opam-init/init.zsh ] && source ~/.opam/opam-init/init.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# opam
+[[ ! -r ~/.opam/opam-init/init.zsh ]] || source ~/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# nvm
 export NVM_DIR="$HOME/.nvm"
-[ -f $(brew --prefix nvm)/nvm.sh ] && source $(brew --prefix nvm)/nvm.sh
-[ -f $(brew --prefix nvm)/etc/bash_completion.d/nvm ] && \
-source $(brew --prefix nvm)/etc/bash_completion.d/nvm
-export PATH="/usr/local/opt/kubernetes-cli@1.22/bin:$PATH"
-export PATH=$(pyenv root)/shims:$PATH
+[ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"
+[ -s "$(brew --prefix nvm)/etc/bash_completion.d/nvm" ] && \
+  \. "$(brew --prefix nvm)/etc/bash_completion.d/nvm"
+
+# pyenv
+eval "$(pyenv init -)"

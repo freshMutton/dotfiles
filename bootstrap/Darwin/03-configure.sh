@@ -1,3 +1,5 @@
+export GLOBAL_PYTHON_VERSION = 3.10
+
 echo "Bootstrapping vim..."
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
@@ -21,16 +23,35 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 
 echo "done"
 
-echo "Bootstrapping Rust..."
+echo "Bootstrapping fzf..."
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+eval "$(brew --prefix fzf)/install --all --no-zsh"
 
 echo "done"
 
-echo "Bootstrapping NVM..."
+echo "Bootstrapping pyenv..."
+
+pyenv install $GLOBAL_PYTHON_VERSION
+pyenv global $GLOBAL_PYTHON_VERSION
+
+echo "done"
+
+echo "Bootstrapping rustup..."
+
+rustup-init -y
+
+echo "done"
+
+echo "Boostrapping opam..."
+
+opam init --no
+eval $(opam env --switch=default)
+
+echo "done"
+
+echo "Bootstrapping nvm..."
 
 mkdir ~/.nvm
-source $(brew --prefix nvm)/nvm.sh
-nvm install stable
+nvm install node
 
 echo "done"
