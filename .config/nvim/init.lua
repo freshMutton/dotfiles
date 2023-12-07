@@ -34,110 +34,136 @@ vim.opt.smartcase = true
 -- share clipboard with other tmux/terminal panes
 vim.opt.clipboard = "unnamed"
 
-vim.cmd([[
-" plugins
-call plug#begin('~/.vim/plugged')
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'mattn/vim-lsp-settings'
-Plug 'tpope/vim-fugitive'
+-- custom keybindings
+vim.g.mapleader =' '
 
-let g:lsp_highlight_references_enabled = 1
+-- buffer
+vim.keymap.set('n', '<leader>l', ':bnext<cr>')
+vim.keymap.set('n', '<leader>h', ':bprevious<cr>')
+vim.keymap.set('n', '<leader>q', ':bp <BAR> bd #<cr>')
 
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_hint = {'text': '?'}
-let g:lsp_signs_warning = {'text': '!'}
+-- loc list
+vim.keymap.set('n', '<leader>lo', ':lopen<cr>')
+vim.keymap.set('n', '<leader>lc', ':lclose<cr>')
 
-set foldmethod=expr
-  \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  \ foldtext=lsp#ui#vim#folding#foldtext()
+-- clear search highlighting on Esc
+vim.keymap.set('n', '<esc>', ':noh<cr>')
 
-Plug 'prettier/vim-prettier', {
-      \ 'do': 'yarn install',
-      \ 'branch': 'release/1.x',
-      \ 'for': [
-      \ 'javascript',
-      \ 'javascript.jsx',
-      \ 'typescript',
-      \ 'typescriptreact',
-      \ 'css',
-      \ 'scss',
-      \ 'json',
-      \ 'graphql',
-      \ 'markdown',
-      \ 'lua',
-      \ 'python',
-      \ 'html' ] }
+-- plugins
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-Plug 'vim-airline/vim-airline'
-let g:airline_powerline_fonts=1
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#fnamemod=':t'
-let g:airline#extensions#ale#enabled = 1
+require("lazy").setup({
+  -- LSP
+  {
+    'williamboman/mason.nvim',
+    config = function()
+      require('mason').setup()
+    end
+  },
+  {'williamboman/mason-lspconfig.nvim'},
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      {'hrsh7th/nvim-cmp'},
+      {'hrsh7th/cmp-nvim-lsp'},
+      {'L3MON4D3/LuaSnip'},
+    },
+    init = function()
+      local lspconfig = require('lspconfig')
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-Plug 'airblade/vim-gitgutter'
-let g:gitgutter_realtime=1
-let g:gitgutter_eager=1
+      local cmp = require('cmp')
+      local luasnip  = require('luasnip')
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<tab>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                  if #cmp.get_entries() == 1 then
+                    cmp.confirm({ select = true })
+                  else
+                    cmp.select_next_item()
+                  end
+                elseif luasnip.expand_or_jumpable() then
+                  luasnip.expand_or_jump()
+                else
+                  fallback()
+                end
+              end, { 'i', 's' }),
+          ['<s-tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' }
+        })
+      })
 
-Plug 'Raimondi/delimitMate'
-Plug 'ntpeters/vim-better-whitespace'
-autocmd BufWritePre * StripWhitespace
+      require('mason-lspconfig').setup({
+        handlers = {
+          function(server_name)
+            lspconfig[server_name].setup({
+              capabilities = capabilities
+            })
+          end
+        }
+      });
+    end,
+    keys = {
+      {'<leader>d', vim.lsp.buf.declaration},
+      {'<leader>t', vim.lsp.buf.hover},
+      {'<leader>r', vim.lsp.buf.rename},
+      {'<leader>f', vim.lsp.buf.formatting},
+    },
+  },
+  -- Chrome
+  -- tabline/statusline
+  {
+    'nvim-lualine/lualine.nvim',
+    opts = {
+      --options = { theme = require('lualine.themes.powerline_dark') },
+      tabline = {
+        lualine_a = {'buffers'},
+      }
+    },
+  },
+  -- git status in line numbers
+  {
+    'lewis6991/gitsigns.nvim',
+  },
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'}
-Plug 'junegunn/fzf.vim'
-command! -nargs=* Files call fzf#run(
-      \ { 'source': 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
-      \ , 'sink'  : 'e'
-      \ , 'down'  : '40%'
-      \ })
-
-let g:fzf_colors =
-      \ { 'fg'      : ['fg', 'Normal']
-      \ , 'bg'      : ['bg', 'Normal']
-      \ , 'hl'      : ['fg', 'Comment']
-      \ , 'fg+'     : ['fg', 'CursorLine', 'CursorColumn', 'Normal']
-      \ , 'bg+'     : ['bg', 'CursorLine', 'CursorColumn']
-      \ , 'hl+'     : ['fg', 'Statement']
-      \ , 'info'    : ['fg', 'PreProc']
-      \ , 'prompt'  : ['fg', 'Conditional']
-      \ , 'pointer' : ['fg', 'Exception']
-      \ , 'marker'  : ['fg', 'Keyword']
-      \ , 'spinner' : ['fg', 'Label']
-      \ , 'header'  : ['fg', 'Comment'] }
-
-call plug#end()
-
-" keybindings
-let mapleader=' ' "<Leader> key
-
-" clear search highlighting with Escape
-nnoremap <esc> :noh<return><esc>
-nnoremap <esc>^[ <esc>^[
-
-" buffer
-nmap <leader>l :bnext<cr>
-nmap <leader>h :bprevious<cr>
-nmap <leader>q :bp <BAR> bd #<cr>
-
-" loc list
-nmap <leader>lo :lopen<cr>
-nmap <leader>lc :lclose<cr>
-
-" tab completion
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" find/navigate
-nmap <leader>[ :Buffer<cr>
-nmap <leader>] :Files<cr>
-nmap <leader>\ :Rg<cr>
-
-" language server
-nmap <buffer> <leader>d :LspDeclaration<cr>
-nmap <buffer> <leader>t :LspHover<cr>
-nmap <buffer> <leader>r :LspRename<cr>
-nmap <buffer> <leader>f :LspDocumentFormat<cr>
-" include code folding, code navigation
-autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
-]])
+  -- fzf
+  {
+    'ibhagwan/fzf-lua',
+    keys = {
+      { '<leader>[', '<cmd>lua require("fzf-lua").buffers()<cr>' },
+      { '<leader>]', '<cmd>lua require("fzf-lua").files({ cmd = "rg --files --no-ignore --hidden --follow --glob \'!.git/*\'"})<cr>' },
+      { '<leader>\\', '<cmd>lua require("fzf-lua").grep()<cr>' }
+    }
+  },
+  -- Fugitive
+  -- Prettier
+  -- vim-better-whitespace
+})
