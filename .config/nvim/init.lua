@@ -91,6 +91,7 @@ require("lazy").setup({
             luasnip.lsp_expand(args.body)
           end
         },
+        preselect = cmp.PreselectMode.None,
         mapping = cmp.mapping.preset.insert({
           ['<tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
@@ -110,6 +111,13 @@ require("lazy").setup({
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
               luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<cr>'] = cmp.mapping(function(fallback)
+            if cmp.visible() and cmp.get_active_entry() then
+              cmp.confirm()
             else
               fallback()
             end
