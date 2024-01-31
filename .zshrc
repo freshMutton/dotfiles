@@ -20,7 +20,7 @@ alias clr="clear"
 
 alias stat="git status --short --branch"
 alias push="git rev-parse --abbrev-ref HEAD | xargs git push origin "
-alias chk="git checkout"
+alias chk="git checkout \$(git branch | fzf)"
 alias add="git add -p"
 alias addall="git add ."
 alias stash="git stash"
@@ -28,7 +28,7 @@ alias pop="git stash pop"
 alias pull="git pull"
 alias fetch="git fetch"
 alias commit="git commit -m"
-alias branch="git branch"
+alias branch="git checkout -b"
 alias nuke="git reset --hard"
 alias log="git log \
   --graph \
@@ -43,6 +43,7 @@ alias shove="git push --force"
 alias rebase="git rebase -i --autosquash"
 
 alias v="nvim"
+alias tree="tree --gitignore -L"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -55,5 +56,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$(brew --prefix nvm)/etc/bash_completion.d/nvm" ] && \
   \. "$(brew --prefix nvm)/etc/bash_completion.d/nvm"
 
-# pyenv
-eval "$(pyenv init -)"
+eval $(thefuck --alias)

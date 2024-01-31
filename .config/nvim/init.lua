@@ -140,10 +140,13 @@ require("lazy").setup({
       });
     end,
     keys = {
-      {'<leader>d', vim.lsp.buf.declaration},
+      {'<leader>e', vim.diagnostic.open_float},
+      {'<leader>d', vim.lsp.buf.definition}, -- todo: declaration not working for tsserver: possibly custom packages?
+      {'<leader>i', vim.lsp.buf.references},
       {'<leader>t', vim.lsp.buf.hover},
       {'<leader>r', vim.lsp.buf.rename},
       {'<leader>f', vim.lsp.buf.formatting},
+      {'<leader>ca', vim.lsp.buf.code_action},
     },
   },
   -- Chrome

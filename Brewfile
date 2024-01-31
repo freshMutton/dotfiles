@@ -16,35 +16,24 @@ brew "zsh"
 
 # cli tools
 brew "fzf"
-brew "getmail"
 brew "jq"
 brew "mas"
-brew "pandoc"
 brew "reattach-to-user-namespace"
 brew "ripgrep"
 brew "tmux"
 brew "nvim"
-cask "mactex"
 brew "awscli"
 brew "act"
 brew "k9s"
-brew "pulumi"
 brew "sqlite"
 
 # languages
 brew "nvm"
-brew "pyenv"
-brew "opam"
-brew "rustup"
 
 # apps
 cask "docker"
-cask "dropbox"
-cask "firefox-developer-edition"
 cask "font-fira-code"
 cask "iterm2"
 cask "postman"
-mas "Affinity Photo", id: 824183456
 cask "rectangle"
-cask "microsoft-edge"
 cask "obsidian"
