@@ -146,7 +146,8 @@ require("lazy").setup({
       {'<leader>t', vim.lsp.buf.hover},
       {'<leader>r', vim.lsp.buf.rename},
       {'<leader>f', vim.lsp.buf.formatting},
-      {'<leader>ca', vim.lsp.buf.code_action},
+      {'<leader>a', vim.lsp.buf.code_action},
+      {'<leader>e', vim.diagnostic.open_float},
     },
   },
   -- Chrome
