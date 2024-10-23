@@ -1,6 +1,3 @@
-vim.cmd("colorscheme molokai")
-vim.g.molokai_original = 1
-
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
@@ -64,6 +61,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  {
+    'polirritmico/monokai-nightasty.nvim',
+    config = function()
+      vim.opt.cursorline = true     
+      vim.opt.background = 'light';
+      vim.cmd("colorscheme monokai-nightasty")
+    end
+  },
   -- LSP
   {
     'williamboman/mason.nvim',
@@ -148,6 +153,26 @@ require("lazy").setup({
       {'<leader>f', vim.lsp.buf.formatting},
       {'<leader>a', vim.lsp.buf.code_action},
       {'<leader>e', vim.diagnostic.open_float},
+      {
+        '<leader>mv',
+        function()
+          local curr = vim.fn.expand('%')
+          local new = vim.fn.input('LSP Rename File: ', curr)
+
+          vim.lsp.util.rename(curr, new)
+          -- TODO: handle non-TS languages
+          vim.lsp.buf.execute_command({
+            command = "_typescript.applyRenameFile",
+            arguments = {
+              {
+                sourceUri = curr,
+                targetUri = new,
+              },
+            },
+            title = "",
+          })
+        end
+      },
     },
   },
   -- Chrome
@@ -178,4 +203,10 @@ require("lazy").setup({
   -- Fugitive
   -- Prettier
   -- vim-better-whitespace
+  {
+    'David-Kunz/gen.nvim',
+    opts = {
+      model = 'codellama:13b'
+    }
+  },
 })
