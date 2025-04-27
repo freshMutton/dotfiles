@@ -23,17 +23,11 @@ brew "ripgrep"
 brew "tmux"
 brew "nvim"
 brew "awscli"
-brew "act"
-brew "k9s"
 brew "sqlite"
 
 # languages
 brew "nvm"
 
 # apps
-cask "docker"
 cask "font-fira-code"
-cask "iterm2"
-cask "postman"
-cask "rectangle"
 cask "obsidian"

@@ -71,6 +71,11 @@ require("lazy").setup({
   },
   -- LSP
   {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
+  {
     'williamboman/mason.nvim',
     config = function()
       require('mason').setup()
@@ -206,7 +211,7 @@ require("lazy").setup({
   {
     'David-Kunz/gen.nvim',
     opts = {
-      model = 'codellama:13b'
+      model = 'qwen2.5-coder:7b'
     }
   },
 })
